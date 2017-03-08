@@ -3,8 +3,8 @@ from math import log2
 
 
 def check_team_amount(team_amount):
-    if((log2(team_amount) - int(log2(team_amount))) != 0.0):
-        print('Для проведения плэй-офф выбрано
+    if log2(team_amount) - int(log2(team_amount)) != 0.0:
+        print('Для проведения плэй-офф выбрано\
               недопустимое количество команд!')
         exit()
 
@@ -20,16 +20,16 @@ def create_teamlist(names, teamlist):
 def make_pairs(teamlist, team_amount):
     for i in range(0, (team_amount - 2)):
         swap_team_idx = random.randint(i, team_amount - 1)
-        if(swap_team_idx != i):
+        if swap_team_idx != i:
             teamlist[i], teamlist[swap_team_idx] = teamlist[swap_team_idx], teamlist[i]
 
 
 def matchmaking(team1, team2):
     team1_score = random.randint(0, 7)
     team2_score = random.randint(0, 7)
-    if(team1_score == team2_score):
+    if team1_score == team2_score:
         winner = random.randint(0, 1)
-        if(winner):
+        if winner:
             team2_score += 1
         else:
             team1_score += 1
@@ -55,7 +55,7 @@ def playoff(teamlist, team_amount):
         step = int(pow(2, stage))
         for i in range(0, team_amount, (step * 2)):
             matchmaking(teamlist[i], teamlist[i + step])
-            if(teamlist[i + step]['scores'][-1][0] > teamlist[i]['scores'][-1][0]):
+            if teamlist[i + step]['scores'][-1][0] > teamlist[i]['scores'][-1][0]:
                 teamlist[i], teamlist[i + step] = teamlist[i + step], teamlist[i]
             teamlist[i + step]['is_out'] = step
         print_playoff_grid(teamlist, step, team_amount)
@@ -78,13 +78,13 @@ def show_team_stat(team, team_amount):
         match_result = ''
         self_score = team['scores'][match][0]
         opponent_score = team['scores'][match][1]
-        if(self_score > opponent_score):
+        if self_score > opponent_score:
             match_result += 'победа'
         else:
             match_result += 'поражение'
         print('%s (%d : %d) - %s' % (team['opponents'][match],
                                      self_score, opponent_score, match_result))
-    if(team['is_out'] == 0):
+    if team['is_out'] == 0:
         print('Эта команда - победитель турнира!')
     else:
         out_stage = int(team_amount / (team['is_out'] * 2))
@@ -95,18 +95,18 @@ def request_for_team_stats(teamlist, team_amount):
     replies = ['y', 'yes', 'n', 'no']
     request = ''
     teamlist_is_sorted = False
-    while(request.lower().strip() not in replies[2:]):
+    while request.lower().strip() not in replies[2:]:
         request = input('Желаете ли вы просмотреть статистику команд? (y/n): ')
-        if(request not in replies[0:2]):
+        if request not in replies[0:2]:
             continue
-        if(not teamlist_is_sorted):
+        if not teamlist_is_sorted:
             teamlist = sorted(teamlist, key=lambda team: team['name'])
             teamlist_is_sorted = True
         show_team_names(teamlist)
-        choosen_team = int(input('Укажите номер команды, статистику которой
+        choosen_team = int(input('Укажите номер команды, статистику которой\
                                  вы желаете просмотреть: ').strip())
-        if(choosen_team not in range(1, (team_amount + 1))):
-            print('Выбранный Вами номер не соответсвует
+        if choosen_team not in range(1, (team_amount + 1)):
+            print('Выбранный Вами номер не соответсвует\
                   ни одной команде из списка! Повторите попытку выбора')
             continue
         show_team_stat(teamlist[choosen_team - 1], team_amount)
