@@ -4,8 +4,8 @@ from math import log2
 
 def check_team_amount(team_amount):
     if log2(team_amount) - int(log2(team_amount)) != 0.0:
-        print('Для проведения плэй-офф выбрано\
-              недопустимое количество команд!')
+        print('Для проведения плэй-офф выбрано'\
+              + 'недопустимое количество команд!')
         exit()
 
 
@@ -103,13 +103,14 @@ def request_for_team_stats(teamlist, team_amount):
             teamlist = sorted(teamlist, key=lambda team: team['name'])
             teamlist_is_sorted = True
         show_team_names(teamlist)
-        choosen_team = int(input('Укажите номер команды, статистику которой\
-                                 вы желаете просмотреть: ').strip())
+        choosen_team = int(input('Укажите номер команды, статистику которой'\
+                                 + 'вы желаете просмотреть: ').strip())
         if choosen_team not in range(1, (team_amount + 1)):
             print('Выбранный Вами номер не соответсвует\
                   ни одной команде из списка! Повторите попытку выбора')
             continue
         show_team_stat(teamlist[choosen_team - 1], team_amount)
+
 
 if __name__ == '__main__':
     team_names = ['team_A', 'team_B', 'team_C', 'team_D', 'team_E', 'team_F',
