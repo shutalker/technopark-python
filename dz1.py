@@ -103,8 +103,12 @@ def request_for_team_stats(teamlist, team_amount):
             teamlist = sorted(teamlist, key=lambda team: team['name'])
             teamlist_is_sorted = True
         show_team_names(teamlist)
-        choosen_team = int(input('Укажите номер команды, статистику которой'\
-                                 + 'вы желаете просмотреть: ').strip())
+        try:
+            choosen_team = int(input('Укажите номер команды, статистику которой'\
+                                     + ' вы желаете просмотреть: ').strip())
+        except ValueError:
+            print('Введено НЕ ЧИСЛО! Повторите попытку выбора')
+            continue
         if choosen_team not in range(1, (team_amount + 1)):
             print('Выбранный Вами номер не соответсвует\
                   ни одной команде из списка! Повторите попытку выбора')
