@@ -42,13 +42,13 @@ def matchmaking(team1, team2):
     team1['scores'].append((team1_score, team2_score))
     team2['opponents'].append(team1['name'])
     team2['scores'].append((team2_score, team1_score))
-    
+
 
 def swap_teams_in_pair(teamlist, team1_idx, step):
     team2_idx = team1_idx + step
     teamlist[team1_idx], teamlist[team2_idx] = teamlist[team2_idx], teamlist[team1_idx]
     teamlist[team2_idx]['is_out'] = step
-    
+
 
 def print_playoff_grid(teamlist, step, team_amount):
     grid_step = (step) * 2
@@ -74,7 +74,7 @@ def playoff(teamlist, team_amount):
             second_team_score = second_team['scores'][-1][0]
             if second_team_score > first_team_score:
                 swap_teams_in_pair(teamlist, team_idx, step_between_teams)
-        print_playoff_grid(teamlist, step, team_amount)
+        print_playoff_grid(teamlist, step_between_teams, team_amount)
 
 
 def show_playoff_winner(winner_team):
