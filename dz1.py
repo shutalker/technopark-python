@@ -3,18 +3,23 @@ from math import log2
 
 
 def check_team_amount(team_amount):
-    if log2(team_amount) - int(log2(team_amount)) != 0.0:
+    if log2(team_amount) - int(log2(team_amount)) != 0:
         print('Для проведения плэй-офф выбрано'\
               + 'недопустимое количество команд!')
         exit()
 
 
-def create_teamlist(names, teamlist):
+def create_teamlist(names):
+    teams = []
     for name in names:
-        team = dict.fromkeys(['name', 'opponents', 'scores', 'is_out'])
-        team['name'], team['is_out'] = name, 0
-        team['opponents'], team['scores'] = list(), list()
-        teamlist.append(team)
+        team = {
+                'name': name,
+                'is_out': 0,
+                'opponents': [],
+                'scores': []
+                }
+        teams.append(team)
+    return teams
 
 
 def make_pairs(teamlist, team_amount):
@@ -37,7 +42,13 @@ def matchmaking(team1, team2):
     team1['scores'].append((team1_score, team2_score))
     team2['opponents'].append(team1['name'])
     team2['scores'].append((team2_score, team1_score))
+    
 
+def swap_teams_in_pair(teamlist, team1_idx, step):
+    team2_idx = team1_idx + step
+    teamlist[team1_idx], teamlist[team2_idx] = teamlist[team2_idx], teamlist[team1_idx]
+    teamlist[team2_idx]['is_out'] = step
+    
 
 def print_playoff_grid(teamlist, step, team_amount):
     grid_step = (step) * 2
@@ -51,13 +62,18 @@ def print_playoff_grid(teamlist, step, team_amount):
 
 
 def playoff(teamlist, team_amount):
-    for stage in range(int(log2(team_amount))):
-        step = int(pow(2, stage))
-        for i in range(0, team_amount, (step * 2)):
-            matchmaking(teamlist[i], teamlist[i + step])
-            if teamlist[i + step]['scores'][-1][0] > teamlist[i]['scores'][-1][0]:
-                teamlist[i], teamlist[i + step] = teamlist[i + step], teamlist[i]
-            teamlist[i + step]['is_out'] = step
+    stage_amount = int(log2(team_amount))
+    for stage in range(stage_amount):
+        step_between_teams = int(pow(2, stage))
+        step_between_pairs = 2 * step_between_teams
+        for team_idx in range(0, team_amount, step_between_pairs):
+            first_team = teamlist[team_idx]
+            second_team = teamlist[team_idx + step_between_teams]
+            matchmaking(first_team, second_team)
+            first_team_score = first_team['scores'][-1][0]
+            second_team_score = second_team['scores'][-1][0]
+            if second_team_score > first_team_score:
+                swap_teams_in_pair(teamlist, team_idx, step_between_teams)
         print_playoff_grid(teamlist, step, team_amount)
 
 
@@ -121,9 +137,8 @@ if __name__ == '__main__':
                   'team_G', 'team_H', 'team_I', 'team_J', 'team_K', 'team_L',
                   'team_M', 'team_N', 'team_O', 'team_P']
     team_amount = len(team_names)
-    teams = list()
     check_team_amount(team_amount)
-    create_teamlist(team_names, teams)
+    teams = create_teamlist(team_names)
     make_pairs(teams, team_amount)
     playoff(teams, team_amount)
     show_playoff_winner(teams[0])
