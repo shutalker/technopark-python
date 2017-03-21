@@ -1,10 +1,12 @@
 from datetime import datetime
+from functools import wraps
 
 
 def log_duration(func):
 
     '''It's a decorator that prints the time of executing other functions'''
 
+    @wraps(func)
     def decorated(*args, **kwargs):
         with open('function_execution_log.txt', 'w') as wf:
             log_string = 'File: ' + __file__ + '\n'
