@@ -6,16 +6,15 @@ def ignore_exceptions(exception):
 
         def wrapped(*args, **kwargs):
 
-            '''When exception occures, this function sets the error_flag
+            '''When exception occures, this function sets the result
                so the result will be None. Otherwise, the result will be
                a normal value returned by decorated function '''
 
-            error_flag = False
             try:
                 result = func(*args, **kwargs)
             except exception:
-                error_flag = True
-            return result if not error_flag else None
+                result = None
+            return result
 
         return wrapped
 
